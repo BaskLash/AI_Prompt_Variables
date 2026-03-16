@@ -1,0 +1,16 @@
+{
+  "name": "promptflow",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "setup": "npm run install:all && npm run db:setup",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "db:setup": "cd backend && npx prisma migrate dev --name init && npx prisma generate",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "start": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./promptflow.db"
+}
+
+model Prompt {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  promptText  String
+  variables   String   // JSON array of variable names e.g. ["tone","topic"]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // A prompt can be referenced in many workflow steps
+  workflowSteps WorkflowStep[]
+}
+
+model Workflow {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  steps WorkflowStep[]
+}
+
+model WorkflowStep {
+  id         String @id @default(uuid())
+  workflowId String
+  promptId   String
+  stepOrder  Int
+
+  workflow Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  prompt   Prompt   @relation(fields: [promptId], references: [id])
+}
